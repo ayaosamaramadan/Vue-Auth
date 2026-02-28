@@ -1,5 +1,4 @@
 import { createStore } from 'vuex'
-import axios from 'axios'
 import router from '../router/router'
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth'
@@ -30,10 +29,15 @@ const store = createStore({
                 const userCredential = await signInWithEmailAndPassword(auth, email, password)
                 const token = await userCredential.user.getIdToken()
                 commit('setToken', token)
+                commit('setUser', {
+                    uid: userCredential.user.uid,
+                    displayName: userCredential.user.displayName || null,
+                    email: userCredential.user.email || null,
+                    providers: (userCredential.user.providerData || []).map(p => p.providerId)
+                })
                 return token
             } catch (err) {
                 console.error('Firebase login error', err.code || err.message || err)
-                // Re-throw so callers can react to the error
                 throw err
             }
         },
@@ -42,6 +46,12 @@ const store = createStore({
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password)
                 const token = await userCredential.user.getIdToken()
                 commit('setToken', token)
+                commit('setUser', {
+                    uid: userCredential.user.uid,
+                    displayName: userCredential.user.displayName || null,
+                    email: userCredential.user.email || null,
+                    providers: (userCredential.user.providerData || []).map(p => p.providerId)
+                })
                 return token
             } catch (err) {
                 console.error('Firebase signup error', err.code || err.message || err)
@@ -54,7 +64,6 @@ const store = createStore({
                 if (user && typeof user.getIdToken === 'function') {
                     token = await user.getIdToken()
                 } else {
-                    // fallback to current Firebase user
                     const current = auth.currentUser
                     if (current && typeof current.getIdToken === 'function') {
                         token = await current.getIdToken()
@@ -62,6 +71,15 @@ const store = createStore({
                 }
                 if (token) {
                     commit('setToken', token)
+                     const u = user || auth.currentUser
+                    if (u) {
+                        commit('setUser', {
+                            uid: u.uid,
+                            displayName: u.displayName || null,
+                            email: u.email || null,
+                            providers: (u.providerData || []).map(p => p.providerId)
+                        })
+                    }
                 }
                 return token
             } catch (err) {
@@ -83,6 +101,9 @@ const store = createStore({
             } else {
                 localStorage.removeItem('token')
             }
+        },
+        setUser(state, user) {
+            state.user = user
         }
     }
 })
