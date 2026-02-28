@@ -5,8 +5,11 @@
       <input type="password" v-model="password" placeholder="Password" required />
       <button type="submit">Sign Up</button>
       <div>
-        <button type="button" @click="googleSignIn">
-          Sign In with Google
+        <button type="button" @click="googleSignUp">
+          Sign Up with Google
+        </button>
+        <button type="button" @click="githubSignUp">
+          Sign up with Github
         </button>
       </div>
     </form>
@@ -37,15 +40,23 @@ export default {
       }
     }
     ,
-    async googleSignIn() {
+    async googleSignUp() {
       this.error = null
       try {
-        const { signInWithGoogle } = await import('@/auth/services/googleAuth')
-        const user = await signInWithGoogle()
-        if (user && typeof user.getIdToken === 'function') {
-          const token = await user.getIdToken()
-          this.$store.commit('setToken', token)
-        }
+        const { signUpWithGoogle } = await import('@/auth/services/googleAuth')
+        const user = await signUpWithGoogle()
+        await this.$store.dispatch('loginWithProvider', user)
+        this.$router.push('/')
+      } catch (err) {
+        this.error = err.code ? `${err.code}: ${err.message}` : err.message || String(err)
+      }
+    },
+    async githubSignUp() {
+      this.error = null
+      try {
+        const { signUpWithGithub } = await import('@/auth/services/githubAuth')
+        const user = await signUpWithGithub()
+        await this.$store.dispatch('loginWithProvider', user)
         this.$router.push('/')
       } catch (err) {
         this.error = err.code ? `${err.code}: ${err.message}` : err.message || String(err)

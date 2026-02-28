@@ -10,6 +10,9 @@
     <button type="button" @click="googleSignIn">
       Login with Google
     </button>
+    <button type="button" @click="githubSignIn">
+      Login with Github
+    </button>
 
     <p v-if="error" class="error">{{ error }}</p>
   </div>
@@ -42,10 +45,18 @@ export default {
       try {
         const { signInWithGoogle } = await import('@/auth/services/googleAuth')
         const user = await signInWithGoogle()
-        if (user && typeof user.getIdToken === 'function') {
-          const token = await user.getIdToken()
-          this.$store.commit('setToken', token)
-        }
+        await this.$store.dispatch('loginWithProvider', user)
+        this.$router.push('/')
+      } catch (err) {
+        this.error = err.code ? `${err.code}: ${err.message}` : err.message || String(err)
+      }
+    },
+    async githubSignIn() {
+      this.error = null
+      try {
+        const { signInWithGithub } = await import('@/auth/services/githubAuth')
+        const user = await signInWithGithub()
+        await this.$store.dispatch('loginWithProvider', user)
         this.$router.push('/')
       } catch (err) {
         this.error = err.code ? `${err.code}: ${err.message}` : err.message || String(err)
