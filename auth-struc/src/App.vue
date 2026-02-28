@@ -1,11 +1,12 @@
 <script setup>
-import Login from './auth/view/Login.vue';
+import Navi from './components/Navi.vue';
+
+
 </script>
 
 <template>
-  <Login/>
+  <Navi/>
+  <router-view/>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

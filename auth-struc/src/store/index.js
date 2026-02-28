@@ -1,18 +1,22 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import { createStore } from 'vuex'
 import axios from 'axios'
-import router from '../router'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import router from '../router/router'
+import { initializeApp } from 'firebase/app'
+import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from 'firebase/auth'
 
-Vue.use(Vuex)
+const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN
+}
 
-firebase.initializeApp({
-    apiKey: '<API_KEY>',
-    authDomain: '<AUTH_DOMAIN>'
-})
+if (!firebaseConfig.apiKey || !firebaseConfig.authDomain) {
+    console.warn('Missing Firebase env vars: VITE_FIREBASE_API_KEY or VITE_FIREBASE_AUTH_DOMAIN')
+}
 
-const store = new Vuex.Store({
+const firebaseApp = initializeApp(firebaseConfig)
+const auth = getAuth(firebaseApp)
+
+const store = createStore({
     state: {
         user: null,
         token: localStorage.getItem('token')
@@ -21,20 +25,33 @@ const store = new Vuex.Store({
         isUserAuthenticated: state => state.token !== null
     },
     actions: {
-        login({ commit }, { email, password }) {
-            return firebase.auth().signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const token = userCredential.user.getIdToken()
-                    commit('setToken', token)
-                    return token
-                })
+        async login({ commit }, { email, password }) {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password)
+                const token = await userCredential.user.getIdToken()
+                commit('setToken', token)
+                return token
+            } catch (err) {
+                console.error('Firebase login error', err.code || err.message || err)
+                // Re-throw so callers can react to the error
+                throw err
+            }
         },
-        logout({ commit }) {
-            return firebase.auth().signOut()
-                .then(() => {
-                    commit('setToken', null)
-                    router.push('/login')
-                })
+        async signup({ commit }, { email, password }) {
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+                const token = await userCredential.user.getIdToken()
+                commit('setToken', token)
+                return token
+            } catch (err) {
+                console.error('Firebase signup error', err.code || err.message || err)
+                throw err
+            }
+        },
+        async logout({ commit }) {
+            await signOut(auth)
+            commit('setToken', null)
+            router.push('/login')
         }
     },
     mutations: {
@@ -48,3 +65,5 @@ const store = new Vuex.Store({
         }
     }
 })
+
+export default store
