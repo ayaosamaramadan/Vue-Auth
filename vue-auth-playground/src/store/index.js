@@ -48,6 +48,27 @@ const store = createStore({
                 throw err
             }
         },
+        async loginWithProvider({ commit }, user) {
+            try {
+                let token = null
+                if (user && typeof user.getIdToken === 'function') {
+                    token = await user.getIdToken()
+                } else {
+                    // fallback to current Firebase user
+                    const current = auth.currentUser
+                    if (current && typeof current.getIdToken === 'function') {
+                        token = await current.getIdToken()
+                    }
+                }
+                if (token) {
+                    commit('setToken', token)
+                }
+                return token
+            } catch (err) {
+                console.error('Provider login error', err.code || err.message || err)
+                throw err
+            }
+        },
         async logout({ commit }) {
             await signOut(auth)
             commit('setToken', null)
