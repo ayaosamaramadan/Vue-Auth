@@ -28,6 +28,7 @@
             email: this.email,
             password: this.password
           })
+             this.$router.push('/')
         } catch (err) {
           this.error = err.code ? `${err.code}: ${err.message}` : err.message || String(err)
         }
