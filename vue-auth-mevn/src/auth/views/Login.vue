@@ -1,45 +1,20 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-card">
-      <h2>Login</h2>
+   <div class="login">
+    <form @submit.prevent="login">
+      <input type="email" v-model="email" required>
+      <input type="password" v-model="password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <router-link to="/signup">Sign up</router-link></p>
 
-      <p v-if="error" class="error-msg">{{ error }}</p>
+    <button type="button" @click="googleSignIn">
+      Login with Google
+    </button>
+    <button type="button" @click="githubSignIn">
+      Login with Github
+    </button>
 
-      <form @submit.prevent="handleLogin">
-        <div class="field">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            v-model="email"
-            placeholder="you@example.com"
-            required
-            autocomplete="email"
-          />
-        </div>
-
-        <div class="field">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            v-model="password"
-            placeholder="••••••••"
-            required
-            autocomplete="current-password"
-          />
-        </div>
-
-        <button type="submit" :disabled="loading">
-          {{ loading ? 'Logging in...' : 'Login' }}
-        </button>
-      </form>
-
-      <p class="switch-link">
-        Don't have an account?
-        <router-link to="/signup">Sign up</router-link>
-      </p>
-    </div>
+    <p v-if="error" class="error">{{ error }}</p>
   </div>
 </template>
 
@@ -54,10 +29,9 @@ const router = useRouter()
 const email = ref('')
 const password = ref('')
 
-const loading = computed(() => store.getters['auth/isLoading'])
 const error = computed(() => store.getters['auth/authError'])
 
-const handleLogin = async () => {
+const login = async () => {
   store.dispatch('auth/clearError')
   try {
     await store.dispatch('auth/login', {
@@ -65,8 +39,8 @@ const handleLogin = async () => {
       password: password.value,
     })
     router.push({ name: 'Home' })
-  } catch {
-    // error is already set in the store
+  } catch (err) {
+    console.error('Login error:', err)
   }
 }
 </script>

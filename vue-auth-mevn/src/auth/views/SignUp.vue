@@ -12,8 +12,7 @@
             id="name"
             type="text"
             v-model="name"
-            placeholder="John Doe"
-            required
+                        required
             autocomplete="name"
           />
         </div>
@@ -24,7 +23,7 @@
             id="email"
             type="email"
             v-model="email"
-            placeholder="you@example.com"
+            
             required
             autocomplete="email"
           />
@@ -36,7 +35,7 @@
             id="password"
             type="password"
             v-model="password"
-            placeholder="At least 6 characters"
+            
             required
             minlength="6"
             autocomplete="new-password"

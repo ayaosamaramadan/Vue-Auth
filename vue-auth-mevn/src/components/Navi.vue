@@ -1,24 +1,12 @@
 <template>
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <router-link to="/">MEVN Auth</router-link>
-    </div>
-    <ul class="navbar-links">
-      <template v-if="isAuthenticated">
-        <li class="navbar-user">👋 {{ user?.name }}</li>
-        <li><router-link to="/">Home</router-link></li>
-        <li>
-          <button class="btn-logout" @click="handleLogout" :disabled="loading">
-            {{ loading ? 'Logging out...' : 'Logout' }}
-          </button>
-        </li>
-      </template>
-      <template v-else>
-        <li><router-link to="/login">Login</router-link></li>
-        <li><router-link to="/signup">Sign Up</router-link></li>
-      </template>
-    </ul>
-  </nav>
+      <nav>
+        <ul>
+            <li><router-link to="/">Home</router-link></li>
+            <li><router-link to="/login">Login</router-link></li>
+            <li><router-link to="/signup">Sign Up</router-link></li>
+            <li v-if="isAuthenticated"><button @click="handleLogout">Logout</button></li>
+        </ul>
+    </nav>
 </template>
 
 <script setup>
