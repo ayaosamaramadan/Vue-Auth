@@ -1,13 +1,12 @@
-<template>
-  <div>
-    vueproject
-  </div>
-</template>
-
 <script setup>
+import Navi from './components/Navi.vue';
+
 
 </script>
 
-<style lang="scss" scoped>
+<template>
+  <Navi/>
+  <router-view/>
+</template>
 
-</style>
+<style scoped></style>
