@@ -1,7 +1,7 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-card" style="text-align:center">
-      <p v-if="error" class="error-msg">{{ error }}</p>
+  <div >
+    <div>
+      <p v-if="error">{{ error }}</p>
       <p v-else>Authenticating... please wait.</p>
     </div>
   </div>

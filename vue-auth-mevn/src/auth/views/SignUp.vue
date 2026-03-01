@@ -1,45 +1,24 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-card">
+  <div>
+    <div >
       <h2>Create Account</h2>
 
-      <p v-if="error" class="error-msg">{{ error }}</p>
+      <p v-if="error">{{ error }}</p>
 
       <form @submit.prevent="handleSignUp">
-        <div class="field">
+        <div >
           <label for="name">Full Name</label>
-          <input
-            id="name"
-            type="text"
-            v-model="name"
-                        required
-            autocomplete="name"
-          />
+          <input id="name" type="text" v-model="name" required autocomplete="name" />
         </div>
 
-        <div class="field">
+        <div >
           <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            v-model="email"
-            
-            required
-            autocomplete="email"
-          />
+          <input id="email" type="email" v-model="email" required autocomplete="email" />
         </div>
 
-        <div class="field">
+        <div >
           <label for="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            v-model="password"
-            
-            required
-            minlength="6"
-            autocomplete="new-password"
-          />
+          <input id="password" type="password" v-model="password" required minlength="6" autocomplete="new-password" />
         </div>
 
         <button type="submit" :disabled="loading">
@@ -47,20 +26,17 @@
         </button>
       </form>
 
-      <div class="divider">or</div>
-
-      <div class="oauth-buttons">
-        <button class="oauth-btn google" @click="oauthLogin('google')">
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+    
+      <div >
+        <button @click="oauthLogin('google')">
           Sign up with Google
         </button>
-        <button class="oauth-btn github" @click="oauthLogin('github')">
-          <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GitHub" />
+        <button @click="oauthLogin('github')">
           Sign up with GitHub
         </button>
       </div>
 
-      <p class="switch-link">
+      <p>
         Already have an account?
         <router-link to="/login">Login</router-link>
       </p>

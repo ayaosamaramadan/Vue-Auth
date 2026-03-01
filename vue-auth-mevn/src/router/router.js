@@ -6,7 +6,7 @@ import SignUp from '../auth/views/SignUp.vue'
 import OAuthCallback from '../auth/views/OAuthCallback.vue'
 
 const routes = [
-  { path: '/', name: 'Home', component: Home, meta: { requiresAuth: true } },
+  { path: '/', name: 'Home', component: Home },
   { path: '/login', name: 'Login', component: Login, meta: { guestOnly: true } },
   { path: '/signup', name: 'SignUp', component: SignUp, meta: { guestOnly: true } },
   // OAuth callback — no guards, passport redirects here with ?token=

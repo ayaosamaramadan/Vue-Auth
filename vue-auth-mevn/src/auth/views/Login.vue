@@ -1,38 +1,34 @@
 <template>
-  <div class="auth-page">
-    <div class="auth-card">
+  <div>
+    <div>
       <h2>Login</h2>
 
-      <p v-if="error" class="error-msg">{{ error }}</p>
+      <p v-if="error">{{ error }}</p>
 
       <form @submit.prevent="handleLogin">
-        <div class="field">
+        <div>
           <label for="email">Email</label>
-          <input id="email" type="email" v-model="email" placeholder="you@example.com" required autocomplete="email" />
+          <input id="email" type="email" v-model="email" required autocomplete="email" />
         </div>
-        <div class="field">
+        <div>
           <label for="password">Password</label>
-          <input id="password" type="password" v-model="password" placeholder="••••••" required autocomplete="current-password" />
+          <input id="password" type="password" v-model="password" required autocomplete="current-password" />
         </div>
-        <button type="submit" :disabled="loading">
-          {{ loading ? 'Logging in...' : 'Login' }}
+        <button type="submit">
+          Login
         </button>
       </form>
 
-      <div class="divider">or</div>
-
-      <div class="oauth-buttons">
-        <button class="oauth-btn google" @click="oauthLogin('google')">
-          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+      <div>
+        <button @click="oauthLogin('google')">
           Continue with Google
         </button>
-        <button class="oauth-btn github" @click="oauthLogin('github')">
-          <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GitHub" />
+        <button @click="oauthLogin('github')">
           Continue with GitHub
         </button>
       </div>
 
-      <p class="switch-link">
+      <p>
         Don’t have an account? <router-link to="/signup">Sign up</router-link>
       </p>
     </div>
