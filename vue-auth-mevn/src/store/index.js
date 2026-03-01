@@ -1,5 +1,9 @@
-// import { createStore } from 'vuex'
+import { createStore } from 'vuex'
+import authModule from './modules/auth.module.js'
 
-const store = []
-
-export default store
+export default createStore({
+  modules: {
+    auth: authModule,
+  },
+  strict: import.meta.env.DEV,
+})
