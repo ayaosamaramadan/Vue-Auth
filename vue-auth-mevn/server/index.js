@@ -12,7 +12,16 @@ const app = express()
 connectDB()
 
 // Middleware
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
+const allowedOrigin = process.env.CLIENT_URL || '*'
+app.use(
+  cors({
+    origin: allowedOrigin,
+    credentials: allowedOrigin !== '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+)
+app.options('*', cors()) // handle preflight for all routes
 app.use(express.json())
 
 // Routes
