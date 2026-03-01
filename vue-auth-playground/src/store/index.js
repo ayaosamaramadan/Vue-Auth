@@ -87,12 +87,14 @@ const store = createStore({
                 throw err
             }
         },
-        async logout({ commit }) {
+
+       
+    async logout({ commit }) {
             await signOut(auth)
             commit('setToken', null)
+            commit('setUser', null)
             router.push('/login')
-        }
-    },
+        } },
     mutations: {
         setToken(state, token) {
             state.token = token
