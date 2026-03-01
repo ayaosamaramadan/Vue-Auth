@@ -47,6 +47,19 @@
         </button>
       </form>
 
+      <div class="divider">or</div>
+
+      <div class="oauth-buttons">
+        <button class="oauth-btn google" @click="oauthLogin('google')">
+          <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" />
+          Sign up with Google
+        </button>
+        <button class="oauth-btn github" @click="oauthLogin('github')">
+          <img src="https://www.svgrepo.com/show/512317/github-142.svg" alt="GitHub" />
+          Sign up with GitHub
+        </button>
+      </div>
+
       <p class="switch-link">
         Already have an account?
         <router-link to="/login">Login</router-link>
@@ -69,6 +82,12 @@ const password = ref('')
 
 const loading = computed(() => store.getters['auth/isLoading'])
 const error = computed(() => store.getters['auth/authError'])
+
+const API = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+const oauthLogin = (provider) => {
+  window.location.href = `${API}/auth/${provider}`
+}
 
 const handleSignUp = async () => {
   store.dispatch('auth/clearError')

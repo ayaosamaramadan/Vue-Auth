@@ -96,6 +96,23 @@ const actions = {
     }
   },
 
+  // Called after OAuth redirect — store token then fetch user
+  async loginWithToken({ commit }, token) {
+    commit('SET_LOADING', true)
+    try {
+      localStorage.setItem('mevn_auth_token', token)
+      commit('SET_AUTH', { user: null, token }) // temporarily store token
+      const { user } = await authService.getMe(token)
+      commit('SET_USER', user)
+    } catch (error) {
+      commit('SET_ERROR', error.message)
+      commit('LOGOUT')
+      throw error
+    } finally {
+      commit('SET_LOADING', false)
+    }
+  },
+
   clearError({ commit }) {
     commit('CLEAR_ERROR')
   },

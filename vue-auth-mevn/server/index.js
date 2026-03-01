@@ -3,10 +3,12 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import authRoutes from './routes/auth.routes.js'
+import passport from './config/passport.js'
 
 dotenv.config()
 
 const app = express()
+app.use(passport.initialize()) // no sessions — we use stateless JWT
 
 // Connect to MongoDB
 connectDB()
